@@ -1,4 +1,4 @@
-package net.onpu_tamago.libs.test;
+package net.onpu_tamago.libs.wifi.test;
 
 import net.onpu_tamago.libs.wifi.Wifi;
 import android.annotation.SuppressLint;
