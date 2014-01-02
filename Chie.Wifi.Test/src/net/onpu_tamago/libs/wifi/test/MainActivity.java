@@ -1,6 +1,7 @@
 package net.onpu_tamago.libs.wifi.test;
 
 import net.onpu_tamago.libs.wifi.Wifi;
+import net.onpu_tamago.libs.wifi.WifiUtil;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.wifi.ScanResult;
@@ -125,6 +126,13 @@ public class MainActivity extends Activity {
 						});
 						break;
 
+					case R.id.op_getSSIDName:
+						runOnUiThread(new Runnable() {
+							public void run() {
+								d.append("SSIDName:" + WifiUtil.getSSIDName("SSIDName") + "\n");
+								d.append("\"QuotedSSIDName\":" + WifiUtil.getSSIDName("\"QuotedSSIDName\"") + "\n	");
+							}});
+						break;
 					default:
 						break;
 					}

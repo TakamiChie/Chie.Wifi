@@ -36,4 +36,11 @@
         android:showAsAction="never"
         android:title="scanWifi()"/>
     
+    <item
+        android:id="@+id/op_getSSIDName"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="getSSIDName()"/>
+
+    
 </menu>
