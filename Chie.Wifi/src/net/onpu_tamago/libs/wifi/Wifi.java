@@ -7,10 +7,10 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 public class Wifi {
 
+	@SuppressWarnings("unused")
 	private static final String TAG = "[Wifi]libs";
 	public static final int ERROR_UNKNOWN = -1;
 	public static final int ERROR_NOPASSWORD = 1;
@@ -141,7 +141,7 @@ public class Wifi {
 			result = false;
 		} else {
 			connectNetworkId(id);
-			Log.i(TAG, "SSID " + newSSID + " Connected");
+			// Log.i(TAG, "SSID " + newSSID + " Connected");
 			result = true;
 		}
 		return result;
@@ -173,12 +173,12 @@ public class Wifi {
 		}
 		int id = mManager.addNetwork(configuration);
 		mManager.updateNetwork(configuration);
-		if(connect){
-			if(id > 0){
+		if (connect) {
+			if (id > 0) {
 				connectNetworkId(id);
 				result = true;
 			}
-		}else{
+		} else {
 			result = true;
 		}
 		return result;
@@ -189,7 +189,9 @@ public class Wifi {
 
 	/**
 	 * 任意のネットワークIDに接続を行う
-	 * @param id ネットワークID
+	 * 
+	 * @param id
+	 *            ネットワークID
 	 */
 	private void connectNetworkId(int id) {
 		WifiInfo current = mManager.getConnectionInfo();
@@ -219,10 +221,10 @@ public class Wifi {
 		List<WifiConfiguration> configlist = mManager.getConfiguredNetworks();
 
 		for (WifiConfiguration config : configlist) {
-			Log.i(TAG, "Configuration:" + config.SSID);
+			// Log.i(TAG, "Configuration:" + config.SSID);
 			if (config.SSID.equals(SSID)
 					|| config.SSID.equals("\"" + SSID + "\"")) {
-				Log.i(TAG, "SSID Found");
+				// Log.i(TAG, "SSID Found");
 				result = config.networkId;
 				break;
 			}
