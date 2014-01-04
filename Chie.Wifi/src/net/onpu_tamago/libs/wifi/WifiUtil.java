@@ -1,5 +1,7 @@
 package net.onpu_tamago.libs.wifi;
 
+import android.net.wifi.WifiInfo;
+
 public final class WifiUtil {
 	private WifiUtil() {
 	}
@@ -21,5 +23,21 @@ public final class WifiUtil {
 			result = ssid;
 		}
 		return result;
+	}
+
+	/**
+	 * {@link WifiInfo#getIpAddress()}で得られるIPアドレス数値を可読性のある文字列に変更します。
+	 * 
+	 * @param ipAddress
+	 *            {@link WifiInfo#getIpAddress()}で得られるIPアドレス
+	 * @return 可読性のある文字列
+	 */
+	public static String ipAddrToReadable(int ipAddress) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 32; i+=8) {
+			sb.append((ipAddress >> i) & 0xFF);
+			sb.append(".");
+		}
+		return sb.substring(0, sb.length() - 1);
 	}
 }

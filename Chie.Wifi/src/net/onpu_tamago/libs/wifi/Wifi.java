@@ -121,6 +121,16 @@ public class Wifi {
 	}
 
 	/**
+	 * 現在接続しているWi-Fi SSIDの名称を取得します。 もしWi-Fi非接続中であれば、nullを返却します。
+	 * 
+	 * @return 接続中のWi-Fi SSID。もしWi-Fi未接続であればnull
+	 */
+	public String getCurrentWifiSSID() {
+		WifiInfo info = mManager.getConnectionInfo();
+		return info.getBSSID() != null ? WifiUtil.getSSIDName(info.getSSID()) : null;
+	}
+
+	/**
 	 * 任意のSSIDに接続を試行します。このメソッドでは、過去に接続したことがある(接続履歴にある)SSIDへの接続のみが行えます。
 	 * 過去に接続したことのないSSIDを指定すると、処理が失敗します。
 	 * 

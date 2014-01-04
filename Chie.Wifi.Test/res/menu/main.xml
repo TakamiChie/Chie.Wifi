@@ -5,42 +5,45 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="goWifiEnabled()"/>
-
     <item
         android:id="@+id/op_goWifiDisabled"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="goWifiDisabled()"/>
-
     <item
         android:id="@+id/op_addSSIDConnection"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="addSSIDConnection()"/>
-    
     <item
         android:id="@+id/op_currentWifiInfo"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="currentWifiInfo()"/>
-
+    <item
+        android:id="@+id/op_currentWifiSSID"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="currentWifiSSID()"/>
     <item
         android:id="@+id/op_changeConnection"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="changeConnection()"/>
-    
     <item
         android:id="@+id/op_scanwifi"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="scanWifi()"/>
-    
     <item
         android:id="@+id/op_getSSIDName"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="getSSIDName()"/>
-
+    <item
+        android:id="@+id/op_ipAddrToReadable"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="ipAddrToReadable()"/>
     
 </menu>

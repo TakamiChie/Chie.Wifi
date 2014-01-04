@@ -43,10 +43,10 @@ public class MainActivity extends Activity {
 			public void run() {
 				EditText in_ssid = (EditText) findViewById(R.id.in_ssid);
 				EditText in_pass = (EditText) findViewById(R.id.in_pass);
-				String ssid = in_ssid.getText().length() == 0 ? null
-						: in_ssid.getText().toString();
-				String pass = in_pass.getText().length() == 0 ? null
-						: in_pass.getText().toString();
+				String ssid = in_ssid.getText().length() == 0 ? null : in_ssid
+						.getText().toString();
+				String pass = in_pass.getText().length() == 0 ? null : in_pass
+						.getText().toString();
 				try {
 					switch (item.getItemId()) {
 					case R.id.op_goWifiEnabled:
@@ -66,6 +66,19 @@ public class MainActivity extends Activity {
 								d.append("MaxAddr:" + i.getMacAddress() + "\n");
 								d.append("NetId:" + i.getNetworkId() + "\n");
 								d.append("RSSI:" + i.getRssi() + "\n");
+							}
+						});
+						break;
+					case R.id.op_currentWifiSSID:
+						runOnUiThread(new Runnable() {
+							public void run() {
+								String s = mController.getCurrentWifiSSID();
+								if (s == null) {
+									d.append("SSID is null\n	");
+								} else {
+									d.append("SSID:" + s + "\n");
+
+								}
 							}
 						});
 						break;
@@ -129,10 +142,28 @@ public class MainActivity extends Activity {
 					case R.id.op_getSSIDName:
 						runOnUiThread(new Runnable() {
 							public void run() {
-								d.append("SSIDName:" + WifiUtil.getSSIDName("SSIDName") + "\n");
-								d.append("\"QuotedSSIDName\":" + WifiUtil.getSSIDName("\"QuotedSSIDName\"") + "\n	");
-							}});
+								d.append("SSIDName:"
+										+ WifiUtil.getSSIDName("SSIDName")
+										+ "\n");
+								d.append("\"QuotedSSIDName\":"
+										+ WifiUtil
+												.getSSIDName("\"QuotedSSIDName\"")
+										+ "\n	");
+							}
+						});
 						break;
+					case R.id.op_ipAddrToReadable:
+						runOnUiThread(new Runnable() {
+							public void run() {
+								d.append("Native IPAddr:"
+										+ mController.getCurrentWifiInfo()
+												.getIpAddress() + "\n");
+								d.append("Readable IPAddr:"
+										+ WifiUtil.ipAddrToReadable(mController
+												.getCurrentWifiInfo()
+												.getIpAddress()) + "\n");
+							}
+						});
 					default:
 						break;
 					}
