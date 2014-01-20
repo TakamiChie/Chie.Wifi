@@ -11,6 +11,11 @@
         android:showAsAction="never"
         android:title="goWifiDisabled()"/>
     <item
+        android:id="@+id/op_disconnectConnection"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="disconnectConnection()"/>
+    <item
         android:id="@+id/op_addSSIDConnection"
         android:orderInCategory="100"
         android:showAsAction="never"

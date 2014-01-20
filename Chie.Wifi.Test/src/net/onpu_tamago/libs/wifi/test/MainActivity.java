@@ -69,6 +69,9 @@ public class MainActivity extends Activity {
 							}
 						});
 						break;
+					case R.id.op_disconnectConnection:
+						mController.disconnectConnection();
+						break;
 					case R.id.op_currentWifiSSID:
 						runOnUiThread(new Runnable() {
 							public void run() {

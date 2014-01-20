@@ -127,7 +127,8 @@ public class Wifi {
 	 */
 	public String getCurrentWifiSSID() {
 		WifiInfo info = mManager.getConnectionInfo();
-		return info.getBSSID() != null ? WifiUtil.getSSIDName(info.getSSID()) : null;
+		return info.getBSSID() != null ? WifiUtil.getSSIDName(info.getSSID())
+				: null;
 	}
 
 	/**
@@ -155,6 +156,16 @@ public class Wifi {
 			result = true;
 		}
 		return result;
+	}
+
+	/**
+	 * SSIDから切断します。
+	 */
+	public void disconnectConnection() {
+		WifiInfo current = mManager.getConnectionInfo();
+		if (current != null) {
+			mManager.disableNetwork(current.getNetworkId());
+		}
 	}
 
 	/**
@@ -204,10 +215,7 @@ public class Wifi {
 	 *            ネットワークID
 	 */
 	private void connectNetworkId(int id) {
-		WifiInfo current = mManager.getConnectionInfo();
-		if (current != null) {
-			mManager.disableNetwork(current.getNetworkId());
-		}
+		disconnectConnection();
 		mManager.enableNetwork(id, true);
 		mManager.reconnect();
 		while (mManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
