@@ -22,29 +22,33 @@ public class Wifi {
 	public class WifiReciever extends BroadcastReceiver {
 
 		private ScanWifiCallback mCallback;
-		public boolean scanFinished;
+		private boolean mScanFinished;
+		private List<ScanResult> mResult;
 
 		public WifiReciever(ScanWifiCallback callback) {
 			this.mCallback = callback;
-			this.scanFinished = false;
+			this.mScanFinished = false;
 		}
 
-		public boolean isScanFinished(){
-			return scanFinished;
+		public boolean isScanFinished() {
+			return mScanFinished;
 		}
-		
+
+		public List<ScanResult> getWifiList() {
+			return mResult;
+		}
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			List<ScanResult> aplist = null;
-			aplist = mManager.getScanResults();
-			for (int i = 0; i < aplist.size(); i++) {
-				ScanResult r = aplist.get(i);
-				if (mCallback != null) {
+			mResult = mManager.getScanResults();
+			if (mCallback != null) {
+				for (int i = 0; i < mResult.size(); i++) {
+					ScanResult r = mResult.get(i);
 					mCallback.foundSSID(r);
 				}
 			}
 			mContext.unregisterReceiver(this);
-			scanFinished = true;
+			mScanFinished = true;
 		}
 	}
 
@@ -122,26 +126,40 @@ public class Wifi {
 		}
 	}
 
+
 	/**
-	 * Wi-Fi SSIDをスキャンし、全ての値を読み込みます。 なお、このメソッドはサブスレッドで呼び出されることを前提に設計されています。
+	 * Wi-Fi SSIDをスキャンし、全ての値を読み込みます。 SSID検索結果は、引数に指定したコールバックメソッドにて通知されます。
 	 * 
 	 * @param callback
 	 *            SSIDが見つかったときに処理を行うコールバック
 	 */
-	public void scanWifi(final ScanWifiCallback callback) {
+	public void scanWifi(Wifi.ScanWifiCallback callback) {
 		if (!mManager.isWifiEnabled())
 			throw new IllegalStateException("Wifi Diabled");
 		WifiReciever reciever = new WifiReciever(callback);
-		mContext.registerReceiver(reciever, new IntentFilter(
-				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-		mManager.startScan();
-		while(!reciever.isScanFinished()){
+		_scanWifi(reciever);
+	}
+
+	/**
+	 * Wi-Fi SSIDをスキャンし、全ての値を読み込みます。 SSID検索結果は戻り値として返却されます。
+	 * なお、このメソッドはサブスレッドで呼び出されることを前提に設計されています。
+	 * 
+	 * @return スキャンされたSSIDのリスト
+	 */
+	public List<ScanResult> scanWifi() {
+		if (!mManager.isWifiEnabled())
+			throw new IllegalStateException("Wifi Diabled");
+		WifiReciever reciever = new WifiReciever(null);
+		_scanWifi(reciever);
+		while (!reciever.isScanFinished()) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// do nothing
 			}
 		}
+		//
+		return reciever.mResult;
 	}
 
 	/**
@@ -281,5 +299,15 @@ public class Wifi {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Wi-Fi SSIDスキャン処理の内部実装メソッド
+	 */ 
+	private void _scanWifi(WifiReciever reciever) {
+		// スキャン開始
+		mContext.registerReceiver(reciever, new IntentFilter(
+				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+		mManager.startScan();
 	}
 }
