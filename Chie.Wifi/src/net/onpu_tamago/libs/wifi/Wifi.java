@@ -2,7 +2,10 @@ package net.onpu_tamago.libs.wifi;
 
 import java.util.List;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -10,13 +13,48 @@ import android.net.wifi.WifiManager;
 
 public class Wifi {
 
+	/**
+	 * Wi-Fiスキャン完了を取得するコールバックです。
+	 * 
+	 * @author TakamiChie
+	 * 
+	 */
+	public class WifiReciever extends BroadcastReceiver {
+
+		private ScanWifiCallback mCallback;
+		public boolean scanFinished;
+
+		public WifiReciever(ScanWifiCallback callback) {
+			this.mCallback = callback;
+			this.scanFinished = false;
+		}
+
+		public boolean isScanFinished(){
+			return scanFinished;
+		}
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			List<ScanResult> aplist = null;
+			aplist = mManager.getScanResults();
+			for (int i = 0; i < aplist.size(); i++) {
+				ScanResult r = aplist.get(i);
+				if (mCallback != null) {
+					mCallback.foundSSID(r);
+				}
+			}
+			mContext.unregisterReceiver(this);
+			scanFinished = true;
+		}
+	}
+
 	@SuppressWarnings("unused")
 	private static final String TAG = "[Wifi]libs";
 	public static final int ERROR_UNKNOWN = -1;
 	public static final int ERROR_NOPASSWORD = 1;
 	public static final int SUCCESS = 0;
-	private Context mContext;
-	private WifiManager mManager;
+	Context mContext;
+	WifiManager mManager;
 
 	/**
 	 * Wi-Fiスキャン中にコールバックされるインターフェースです
@@ -93,20 +131,15 @@ public class Wifi {
 	public void scanWifi(final ScanWifiCallback callback) {
 		if (!mManager.isWifiEnabled())
 			throw new IllegalStateException("Wifi Diabled");
+		WifiReciever reciever = new WifiReciever(callback);
+		mContext.registerReceiver(reciever, new IntentFilter(
+				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 		mManager.startScan();
-		List<ScanResult> aplist = null;
-		while (aplist == null) {
+		while(!reciever.isScanFinished()){
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			aplist = mManager.getScanResults();
-		}
-		for (int i = 0; i < aplist.size(); i++) {
-			ScanResult r = aplist.get(i);
-			if (callback != null) {
-				callback.foundSSID(r);
+				// do nothing
 			}
 		}
 	}
@@ -249,5 +282,4 @@ public class Wifi {
 		}
 		return result;
 	}
-
 }
