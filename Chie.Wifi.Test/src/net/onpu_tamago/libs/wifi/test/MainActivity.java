@@ -1,5 +1,7 @@
 package net.onpu_tamago.libs.wifi.test;
 
+import java.util.List;
+
 import net.onpu_tamago.libs.wifi.Wifi;
 import net.onpu_tamago.libs.wifi.WifiUtil;
 import android.annotation.SuppressLint;
@@ -118,7 +120,7 @@ public class MainActivity extends Activity {
 							});
 						}
 						break;
-					case R.id.op_scanwifi:
+					case R.id.op_scanwifi_callback:
 						mController.scanWifi(new Wifi.ScanWifiCallback() {
 							@Override
 							public void foundSSID(final ScanResult result) {
@@ -138,6 +140,29 @@ public class MainActivity extends Activity {
 										}
 									}
 								});
+							}
+						});
+						break;
+
+					case R.id.op_scanwifi:
+						final List<ScanResult> scanlist = mController
+								.scanWifi();
+						runOnUiThread(new Runnable() {
+							public void run() {
+								for (ScanResult scan : scanlist) {
+									d.append("---------------------\n");
+									d.append("BSSID:" + scan.BSSID + "\n");
+									d.append("SSID:" + scan.SSID + "\n");
+									d.append("Capability:" + scan.capabilities
+											+ "\n");
+									d.append("Frequency:" + scan.frequency
+											+ "\n");
+									d.append("Level:" + scan.level + "\n");
+									if (Build.VERSION.SDK_INT >= 17) {
+										d.append("TimeStamp:" + scan.timestamp
+												+ "\n");
+									}
+								}
 							}
 						});
 						break;

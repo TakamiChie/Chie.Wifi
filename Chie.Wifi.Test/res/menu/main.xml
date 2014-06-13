@@ -36,6 +36,11 @@
         android:showAsAction="never"
         android:title="changeConnection()"/>
     <item
+        android:id="@+id/op_scanwifi_callback"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="scanWifi(callback)"/>
+    <item
         android:id="@+id/op_scanwifi"
         android:orderInCategory="100"
         android:showAsAction="never"
