@@ -47,7 +47,6 @@ public class Wifi {
 					mCallback.foundSSID(r);
 				}
 			}
-			mContext.unregisterReceiver(this);
 			mScanFinished = true;
 		}
 	}
@@ -126,13 +125,14 @@ public class Wifi {
 		}
 	}
 
-
 	/**
 	 * Wi-Fi SSIDをスキャンし、全ての値を読み込みます。 SSID検索結果は、引数に指定したコールバックメソッドにて通知されます。
 	 * 
 	 * @param callback
 	 *            SSIDが見つかったときに処理を行うコールバック
+	 * @deprecated リソースリークが発生する場合があります。
 	 */
+	@Deprecated
 	public void scanWifi(Wifi.ScanWifiCallback callback) {
 		if (!mManager.isWifiEnabled())
 			throw new IllegalStateException("Wifi Diabled");
@@ -158,7 +158,7 @@ public class Wifi {
 				// do nothing
 			}
 		}
-		//
+		mContext.unregisterReceiver(reciever);
 		return reciever.mResult;
 	}
 
@@ -267,7 +267,7 @@ public class Wifi {
 	 */
 	private void connectNetworkId(int id) {
 		disconnectConnection();
-		mManager.enableNetwork(id, true);
+		mManager.enableNetwork(id, false);
 		mManager.reconnect();
 		while (mManager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) {
 			try {
@@ -303,11 +303,13 @@ public class Wifi {
 
 	/**
 	 * Wi-Fi SSIDスキャン処理の内部実装メソッド
-	 */ 
+	 */
 	private void _scanWifi(WifiReciever reciever) {
 		// スキャン開始
-		mContext.registerReceiver(reciever, new IntentFilter(
-				WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+		if (reciever != null) {
+			mContext.registerReceiver(reciever, new IntentFilter(
+					WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+		}
 		mManager.startScan();
 	}
 }
