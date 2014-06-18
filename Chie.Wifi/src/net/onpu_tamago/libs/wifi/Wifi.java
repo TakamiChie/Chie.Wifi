@@ -47,6 +47,7 @@ public class Wifi {
 					mCallback.foundSSID(r);
 				}
 			}
+			mContext.unregisterReceiver(this);
 			mScanFinished = true;
 		}
 	}
@@ -130,9 +131,7 @@ public class Wifi {
 	 * 
 	 * @param callback
 	 *            SSIDが見つかったときに処理を行うコールバック
-	 * @deprecated リソースリークが発生する場合があります。
 	 */
-	@Deprecated
 	public void scanWifi(Wifi.ScanWifiCallback callback) {
 		if (!mManager.isWifiEnabled())
 			throw new IllegalStateException("Wifi Diabled");
@@ -158,7 +157,6 @@ public class Wifi {
 				// do nothing
 			}
 		}
-		mContext.unregisterReceiver(reciever);
 		return reciever.mResult;
 	}
 
